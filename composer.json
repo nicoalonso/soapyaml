@@ -1,0 +1,15 @@
+{
+    "name": "nk/yaml2xml",
+    "description": "Transform yaml files to XML",
+    "type": "library",
+    "require": {
+        "symfony/yaml": "^3.4.36"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nico",
+            "email": "nicolas.alonso81@gmail.com"
+        }
+    ]
+}
