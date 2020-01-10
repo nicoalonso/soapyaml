@@ -49,7 +49,7 @@ class Node
     public function __construct($data = null, $parent = null)
     {
         if (!is_null($data)) {
-            $this->parse( $data );
+            $this->load( $data );
         }
     }
 
@@ -75,6 +75,23 @@ class Node
         $this->namespace = $ns;
 
         return $this;
+    }
+
+    /**
+     * Propagate namespace
+     * 
+     * @param  string  $ns
+     * @param  boolean $force
+     */
+    public function propagateNamespace($ns, $force = false)
+    {
+        if (is_null($this->namespace) || $force) {
+            $this->namespace = $ns;
+
+            foreach ($this->childs as $name => $node) {
+                $node->propagateNamespace( $ns );
+            }
+        }
     }
 
     /**
@@ -189,21 +206,27 @@ class Node
      * 
      * @param  array $data
      * @param  Node  $parent
-     * 
-     * @return boolean
      */
-    public function parse($data, $parent = null)
+    public function load($data, $parent = null)
     {
+        $isNs = false;
+        $this->parent = $parent;
+
         foreach ($data as $name => $value) {
             if (($name == 'ns' || $name == 'namespace') && is_string($value)) {
                 $this->setNamespace( $value );
+                $isNs = true;
             }
             else if (is_array($value)) {
                 $this->addChild($name, $value);
             }
             else {
-                $this->addAttr($name, $value)
+                $this->addAttr($name, $value);
             }
+        }
+
+        if ($isNs) {
+            $this->propagateNamespace( $this->namespace, true );
         }
     }
 }

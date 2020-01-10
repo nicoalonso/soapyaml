@@ -8,16 +8,33 @@ use NK\SoapYaml\Node;
 class NodeTest extends TestCase
 {
     /**
-     * Test parse
+     * Test load
      */
-    public function testParse()
+    public function testLoad()
     {
         // [ Given ]
-        $node = new Node();
+        $data = array(
+            'ns' => 'envelope',
+            'query' => 'test',
+            'keys' => array(
+                'type' => 'string',
+                'mandatory' => '',
+                'readonly' => ''
+            )
+        );
 
         // [ When ]
+        $node = new Node($data);
 
         // [ Then ]
-        $this->assertTrue( true );
+        $this->assertEquals('envelope', $node->getNamespace());
+        $this->assertEquals('test', $node->getAttr('query'));
+        $this->assertNull($node->getAttr('dummy'));
+        $subNode = $node->getChild('keys');
+        $this->assertNotNull( $subNode );
+        $this->assertEquals('envelope', $subNode->getNamespace());
+        $this->assertEquals('string', $subNode->getAttr('type'));
+
+
     }
 }
