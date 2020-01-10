@@ -1,6 +1,6 @@
 <?php
 
-namespace nk\SoapYaml;
+namespace NK\SoapYaml;
 
 use Symfony\Component\Yaml\Yaml;
 
@@ -9,7 +9,29 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Node
 {
+    /**
+     * Name space
+     * @var string
+     */
+    protected $namespace = 'ns';
 
+    /**
+     * Attributes
+     * @var array
+     */
+    protected $attrs = array();
+
+    /**
+     * Childs
+     * @var array
+     */
+    protected $childs = array();
+
+    /**
+     * Parent node
+     * @var null
+     */
+    protected $parent = null;
 
     /**
      * Constructor

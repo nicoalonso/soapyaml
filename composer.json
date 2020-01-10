@@ -1,15 +1,23 @@
 {
-    "name": "nk/yaml2xml",
-    "description": "Transform yaml files to XML",
+    "name": "nk/soapyaml",
     "type": "library",
-    "require": {
-        "symfony/yaml": "^3.4.36"
-    },
+    "description": "Create SOAP requests by YAML templates",
+    "keywords": [],
+    "homepage": "https://github.com/nicoalonso/soapyaml",
     "license": "MIT",
     "authors": [
         {
             "name": "Nico",
             "email": "nicolas.alonso81@gmail.com"
         }
-    ]
+    ],
+    "require": {
+        "symfony/yaml": "^3.4.36"
+    },
+    "autoload": {
+        "psr-4": { "NK\\SoapYaml\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    }
 }
