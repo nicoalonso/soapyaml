@@ -1,13 +1,13 @@
 <?php
 
-namespace nk;
+namespace nk\SoapYaml;
 
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Yaml 2 XML
+ * SOAP YAML Node class
  */
-class Yaml2XML
+class Node
 {
 
 
