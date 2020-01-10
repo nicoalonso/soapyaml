@@ -23,6 +23,16 @@ class Node
     protected $namespace = null;
 
     /**
+     * @var string
+     */
+    protected $tagName = '';
+
+    /**
+     * @var mixed
+     */
+    protected $tagValue;
+
+    /**
      * Attributes
      * @var array
      */
@@ -46,10 +56,10 @@ class Node
      * @param array $data
      * @param Node  $parent
      */
-    public function __construct($data = null, $parent = null)
+    public function __construct(array $data = null, string $nodeName = 'root', Node $parent = null)
     {
         if (!is_null($data)) {
-            $this->load( $data );
+            $this->load( $data, $nodeName, $parent );
         }
     }
 
@@ -177,7 +187,7 @@ class Node
             $name = substr($name, strlen(self::S_CHILD));
         }
 
-        $this->childs[ $name ] = new Node($childData, $this);
+        $this->childs[ $name ] = new Node($childData, $name, $this);
     }
 
     /**
@@ -207,9 +217,10 @@ class Node
      * @param  array $data
      * @param  Node  $parent
      */
-    public function load($data, $parent = null)
+    public function load(array $data, string $nodeName = 'root', Node $parent = null)
     {
         $isNs = false;
+        $this->tagName = $nodeName;
         $this->parent = $parent;
 
         foreach ($data as $name => $value) {
@@ -228,5 +239,64 @@ class Node
         if ($isNs) {
             $this->propagateNamespace( $this->namespace, true );
         }
+    }
+
+    /**
+     * Convert to array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = array();
+
+        // store namespace
+        if (is_null($this->parent) || ($this->namespace != $this->parent->getNamespace())) {
+            $result['ns'] = $this->namespace;
+        }
+
+        // Atributes
+        foreach ($this->attrs as $attrName => $attrValue) {
+            // avoid colisions
+            if (array_key_exists($attrName, $this->childs)) {
+                $attrName = self::S_ATTR . $attrName;
+            }
+
+            $result[ $attrName ] = $attrValue;
+        }
+
+        // Childs
+        foreach ($this->childs as $cName => $cValue) {
+            // avoid collisions
+            if (array_key_exists($cName, $this->attrs)) {
+                $cName = self::S_CHILD . $cName;
+            }
+
+            $result[ $cName ] = $cValue->toArray();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns a SOAP xml request
+     */
+    public function toXml()
+    {
+        if ($this->tagName)
+        if (empty($this->namespace)) {
+            $tag = $this->tagName;
+        }
+        else {
+            $tag = $this->namespace .':'. $this->tagName;
+        }
+        
+        if (empty($this->attrs) && empty($this->childs)) {
+            return sprintf("<%s/>", $tag);
+        }
+
+
+
+        return $xml;
     }
 }

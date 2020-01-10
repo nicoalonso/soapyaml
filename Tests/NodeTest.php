@@ -14,12 +14,14 @@ class NodeTest extends TestCase
     {
         // [ Given ]
         $data = array(
-            'ns' => 'envelope',
-            'query' => 'test',
-            'keys' => array(
-                'type' => 'string',
-                'mandatory' => '',
-                'readonly' => ''
+            'soap' => array(
+                'ns' => 'envelope',
+                'query' => 'test',
+                'keys' => array(
+                    'type' => 'string',
+                    'mandatory' => '',
+                    'readonly' => ''
+                )
             )
         );
 
