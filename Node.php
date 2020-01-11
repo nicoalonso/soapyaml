@@ -2,8 +2,6 @@
 
 namespace NK\SoapYaml;
 
-use Symfony\Component\Yaml\Yaml;
-
 use NK\SoapYaml\Exception\LoadException;
 
 /**
@@ -32,11 +30,11 @@ class Node
     /**
      * @var mixed
      */
-    protected $tagValue;
+    protected $tagValue = null;
 
     /**
      * Parent node
-     * @var null
+     * @var Node
      */
     protected $parent = null;
 
@@ -357,8 +355,13 @@ class Node
         $result = array();
 
         // store namespace
-        if (is_null($this->parent) || ($this->namespace != $this->parent->getNamespace())) {
+        if (!is_null($this->namespace) && (is_null($this->parent) || ($this->namespace != $this->parent->getNamespace()))) {
             $result['ns'] = $this->namespace;
+        }
+
+        // store value
+        if (!is_null($this->tagValue)) {
+            $result['value'] = $this->tagValue;
         }
 
         // Atributes
@@ -379,6 +382,11 @@ class Node
             }
 
             $result[ $cName ] = $cValue->toArray();
+        }
+
+        // If is the root
+        if (is_null($this->parent)) {
+            return array($this->tagName => $result);
         }
 
         return $result;

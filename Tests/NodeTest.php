@@ -121,4 +121,50 @@ class NodeTest extends TestCase
         // [ When ]
         $node->dummy();
     }
+
+    /**
+     * Test toArray
+     */
+    public function testToArray()
+    {
+        // [ Given ]
+        $node = new Node('soap', null, array('ns' => 'envelope'));
+        $node
+            ->add( new Node('keys', null, array('query' => 'dummy')) )
+            ->add( new Node('query', null, array('type' => 'Structure')) )
+        ;
+        $node->getQuery()
+            ->add( new Node('fields', null, array('ns' => 'ns', 'type' => 'Array')) )
+        ;
+        $node->getQuery()->getFields()
+            ->add( new Node('field', null, array('type' => 'String', 'value' => 'id')) )
+        ;
+
+        // [ When ]
+        $result = $node->toArray();
+
+        // [ Then ]
+        $this->assertInternalType('array', $result);
+        $this->assertCount(3, $result['soap']);
+        $this->assertArrayHasKey('ns', $result['soap']);
+        $this->assertArrayHasKey('keys', $result['soap']);
+        $this->assertArrayHasKey('query', $result['soap']);
+        $query = $result['soap']['query'];
+        $this->assertCount(2, $query);
+        $this->assertArrayHasKey('fields', $query);
+        $this->assertArrayHasKey('type', $query);
+        $this->assertEquals('Structure', $query['type']);
+        $this->assertCount(3, $query['fields']);
+        $this->assertArrayHasKey('ns', $query['fields']);
+        $this->assertArrayHasKey('type', $query['fields']);
+        $this->assertArrayHasKey('field', $query['fields']);
+        $this->assertEquals('Array', $query['fields']['type']);
+        $field = $query['fields']['field'];
+        $this->assertCount(2, $field);
+        $this->assertArrayHasKey('type', $field);
+        $this->assertArrayHasKey('value', $field);
+        $this->assertEquals('id', $field['value']);
+    }
+
+    
 }
