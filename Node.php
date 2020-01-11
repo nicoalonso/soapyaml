@@ -394,22 +394,71 @@ class Node
 
     /**
      * Returns a SOAP xml request
+     *
+     * @param  integer  $spaces
+     * @param  integer  $currentTab
+     * 
+     * @return string
      */
-    public function toXml()
+    public function toXml($spaces = 0, $currentTab = 0)
     {
-        if ($this->tagName)
-        if (empty($this->namespace)) {
+        // calc tab
+        $tab = str_repeat(' ', $currentTab);
+        $end = '';
+        if ($spaces > 0) {
+            $end = PHP_EOL;
+        }
+
+        // check namespace
+        $ns = $this->namespace;
+
+        if (empty($ns) && !is_null($this->parent)) {
+            // Get ns from parent
+            $ns = $this->parent->getNamespace();
+            if (!empty($ns)) {
+                $this->setNamespace($ns);
+            }
+        }
+
+        // make tag
+        if (empty($ns)) {
             $tag = $this->tagName;
         }
         else {
-            $tag = $this->namespace .':'. $this->tagName;
+            $tag = $ns .':'. $this->tagName;
         }
-        
+
+        // Return empty tag
         if (empty($this->attrs) && empty($this->childs)) {
-            return sprintf("<%s/>", $tag);
+            return sprintf("%s<%s/>%s", $tab, $tag, $end);
         }
 
+        $xml = sprintf('%s<%s', $tab, $tag);
 
+        // Attributes
+        if (count($this->attrs)) {
+            $attrXml = array();
+            foreach ($this->attrs as $nameAttr => $valueAttr) {
+                $attrXml[] = sprintf('%s="%s"', $nameAttr, $valueAttr);
+            }
+            $xml .= ' '. implode(' ', $attrXml);
+        }
+        $xml .= '>';
+
+        if (count($this->childs)) {
+            $xml .= $end;
+
+            // Childs
+            $currentTab += $spaces;
+            foreach ($this->childs as $nameChild => $childNode) {
+                $xml .= $childNode->toXml($spaces, $currentTab);
+            }
+
+            $xml .= sprintf("%s</%s>%s", $tab, $tag, $end);
+        }
+        else {
+            $xml .= sprintf("</%s>%s", $tag, $end);
+        }
 
         return $xml;
     }

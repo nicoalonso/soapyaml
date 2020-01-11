@@ -166,5 +166,38 @@ class NodeTest extends TestCase
         $this->assertEquals('id', $field['value']);
     }
 
-    
+    /**
+     * Test toXml
+     */
+    public function testToXml()
+    {
+        // [ Given ]
+        $node = new Node('soap', null, array('ns' => 'envelope'));
+        $node
+            ->add( new Node('keys', null, array('query' => 'dummy')) )
+            ->add( new Node('query', null, array('type' => 'Structure')) )
+        ;
+        $node->getQuery()
+            ->add( new Node('fields', null, array('ns' => 'ns', 'type' => 'Array')) )
+        ;
+        $node->getQuery()->getFields()
+            ->add( new Node('field', null, array('type' => 'String', 'value' => 'id')) )
+        ;
+        $expect = file_get_contents(__DIR__. '/fixtures/expect_toXml_compact.xml');
+
+        // [ When ]
+        $result = $node->toXml();
+
+        // [ Then ]
+        $this->assertEquals($expect, $result);
+
+        // [ Given ]
+        $expect = file_get_contents(__DIR__. '/fixtures/expect_toXml_human.xml');
+
+        // [ When ]
+        $result = $node->toXml(2);
+
+        // [ Then ]
+        $this->assertEquals($expect, $result);
+    }
 }
