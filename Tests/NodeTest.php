@@ -175,10 +175,11 @@ class NodeTest extends TestCase
         $node = new Node('soap', null, array('ns' => 'envelope'));
         $node
             ->add( new Node('keys', null, array('query' => 'dummy')) )
-            ->add( new Node('query', null, array('type' => 'Structure')) )
+            ->add( new Node('query', null, array('ns' => 'ns', 'type' => 'Structure')) )
         ;
         $node->getQuery()
-            ->add( new Node('fields', null, array('ns' => 'ns', 'type' => 'Array')) )
+            ->add( new Node('fields', null, array('type' => 'Array')) )
+            ->add( 'Category', array('type' => 'String', 'value' => 'All') )
         ;
         $node->getQuery()->getFields()
             ->add( new Node('field', null, array('type' => 'String', 'value' => 'id')) )

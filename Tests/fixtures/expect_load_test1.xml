@@ -1,0 +1,11 @@
+<envelope:soap>
+  <envelope:keys query="group"></envelope:keys>
+  <ns:query type="Structure">
+    <ns:fields type="Array">
+      <ns:field type="String">id</ns:field>
+      <ns:field type="String">name</ns:field>
+      <ns:field type="String">date</ns:field>
+    </ns:fields>
+    <ns:Category type="String">Users</ns:Category>
+  </ns:query>
+</envelope:soap>

@@ -1,0 +1,15 @@
+soap:
+  ns: envelope
+  keys:
+    query: 'dummy'
+  query:
+    ns: ns
+    type: Structure
+    fields:
+      type: Array
+      field:
+        type: String
+        value: id
+    Category:
+      type: String
+      value: All

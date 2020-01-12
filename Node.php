@@ -205,6 +205,23 @@ class Node
     }
 
     /**
+     * Modify attribute
+     * 
+     * @param  string $name
+     * @param  mixed  $value
+     * 
+     * @return Node
+     */
+    public function modifyAttr($name, $value)
+    {
+        if (array_key_exists($name, $this->attrs)) {
+            $this->attrs[$name] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
      * get childs
      * 
      * @return array
@@ -445,21 +462,75 @@ class Node
         }
         $xml .= '>';
 
+        $currentTab += $spaces;
         if (count($this->childs)) {
-            $xml .= $end;
+            // Array types
+            $type = $this->getAttr('type');
+            if (!is_null($type) && (strcasecmp($type, 'array') === 0) && (count($this->childs) == 1)) {
+                // the node is empty
+                if (is_null($this->tagValue)) {
+                    $xml .= sprintf("</%s>%s", $tag, $end);
+                }
+                else {
+                    $itemKey = key($this->childs);
+                    $item = $this->childs[ $itemKey ];
+                    $values = $this->tagValue;
 
-            // Childs
-            $currentTab += $spaces;
-            foreach ($this->childs as $nameChild => $childNode) {
-                $xml .= $childNode->toXml($spaces, $currentTab);
+                    if (!is_array($values)) {
+                        $values = array($this->tagValue);
+                    }
+
+                    $xml .= $end;
+                    foreach ($values as $value) {
+                        $item->setValue( $value );
+                        $xml .= $item->toXml($spaces, $currentTab);
+                    }
+
+                    $xml .= sprintf("%s</%s>%s", $tab, $tag, $end);
+                }
             }
+            else {
+                $xml .= $end;
 
-            $xml .= sprintf("%s</%s>%s", $tab, $tag, $end);
+                // Childs
+                foreach ($this->childs as $nameChild => $childNode) {
+                    $xml .= $childNode->toXml($spaces, $currentTab);
+                }
+
+                $xml .= sprintf("%s</%s>%s", $tab, $tag, $end);
+            }
         }
         else {
+            if (!empty($this->tagValue)) {
+                $xml .= $this->tagValue;
+            }
+
             $xml .= sprintf("</%s>%s", $tag, $end);
         }
 
         return $xml;
+    }
+
+    /**
+     * Recursive search node
+     * 
+     * @param  string $childName
+     * 
+     * @return Node|null
+     */
+    public function search($childName)
+    {
+        if (array_key_exists($childName, $this->childs)) {
+            return $this->childs[ $childName ];
+        }
+
+        foreach ($this->childs as $childNode) {
+            $found = $childNode->search( $childName );
+            if (is_object($found)) {
+                return $found;
+            }
+        }
+
+        return null;
     }
 }

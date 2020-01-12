@@ -1,1 +1,1 @@
-<envelope:soap><envelope:keys query="dummy"></envelope:keys><envelope:query type="Structure"><ns:fields type="Array"><ns:field type="String"></ns:field></ns:fields></envelope:query></envelope:soap>
+<envelope:soap><envelope:keys query="dummy"></envelope:keys><ns:query type="Structure"><ns:fields type="Array"></ns:fields><ns:Category type="String">All</ns:Category></ns:query></envelope:soap>
