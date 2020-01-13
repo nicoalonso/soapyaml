@@ -55,4 +55,46 @@ class TemplateTest extends TestCase
         // [ Then ]
         $this->assertEquals($expect, $request);
     }
+
+    /**
+     * Test fromXML
+     */
+    public function testFromXml()
+    {
+        // [ Given ]
+        $template = new Template();
+        $xmlFile = __DIR__ . '/fixtures/load_from_xml_test1.xml';
+        $expect = file_get_contents( __DIR__ . '/fixtures/expect_load_from_xml_test1.yaml' );
+
+        // [ When ]
+        $res = $template->fromXml( $xmlFile );
+
+        // [ Then ]
+        $this->assertTrue($res);
+
+        // [ When ]
+        $yaml = $template->toYaml();
+
+        // [ Then ]
+        $this->assertEquals( $expect, $yaml );
+    }
+
+    /**
+     * Test load2
+     * Reverse of testFromXml
+     */
+    public function testLoad2()
+    {
+        // [ Given ]
+        $template = new Template();
+        $filename = __DIR__ . '/fixtures/expect_load_from_xml_test1.yaml';
+        $expect = file_get_contents( __DIR__ . '/fixtures/load_from_xml_test2.xml' );
+
+        // [ When ]
+        $template->load( $filename );
+        $result = $template->toXml(2);
+
+        // [ Then ]
+        $this->assertEquals($expect, $result);
+    }
 }

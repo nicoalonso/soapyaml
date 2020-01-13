@@ -1,0 +1,16 @@
+soap:
+  ns: envelope
+  'xmlns:envelope': 'http://envelope'
+  'xmlns:ns': 'http://ns'
+  keys:
+    query: group
+  query:
+    ns: ns
+    type: Structure
+    fields:
+      type: Array
+      field:
+        type: String
+    Category:
+      value: All
+      type: String

@@ -5,6 +5,7 @@ namespace NK\SoapYaml;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
+use NK\SoapYaml\Node;
 use NK\SoapYaml\Exception\LoadException;
 
 /**
@@ -123,5 +124,47 @@ class Template
         }
 
         return $this->root->toXml( $spaces );
+    }
+
+    /**
+     * Export to Yaml
+     * 
+     * @return string
+     */
+    public function toYaml()
+    {
+        $input = $this->root->toArray();
+        return Yaml::dump($input, 10, 2);
+    }
+
+    /**
+     * Load from XML
+     * Use to create Yaml template from SOAP Request
+     * 
+     * @param  string $xml
+     *
+     * @return boolean
+     */
+    public function fromXml($xmlFilename)
+    {
+        libxml_use_internal_errors();
+
+        $doc = new \DOMDocument('1.0', 'utf-8');
+        if (false === $doc->load( $xmlFilename )) {
+            return false;
+        }
+
+        $namespaces = array();
+        $element = $doc->documentElement;
+        $this->root = new Node($element->localName);
+        $this->root->fromXml( $element, $namespaces );
+
+        // Set namespaces
+        foreach ($namespaces as $ns) {
+            $name = "xmlns:$ns";
+            $this->root->add($name, $element->getAttribute($name));
+        }
+
+        return true;
     }
 }

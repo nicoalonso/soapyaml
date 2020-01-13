@@ -384,7 +384,11 @@ class Node
         // Atributes
         foreach ($this->attrs as $attrName => $attrValue) {
             // avoid colisions
-            if (array_key_exists($attrName, $this->childs)) {
+            $colision = (strcasecmp($attrName, 'ns') === 0) 
+                     || (strcasecmp($attrName, 'value') === 0)
+                     || array_key_exists($attrName, $this->childs);
+
+            if ($colision) {
                 $attrName = self::S_ATTR . $attrName;
             }
 
@@ -394,7 +398,11 @@ class Node
         // Childs
         foreach ($this->childs as $cName => $cValue) {
             // avoid collisions
-            if (array_key_exists($cName, $this->attrs)) {
+            $colision = (strcasecmp($cName, 'ns') === 0) 
+                     || (strcasecmp($cName, 'value') === 0)
+                     || array_key_exists($cName, $this->attrs);
+
+            if ($colision) {
                 $cName = self::S_CHILD . $cName;
             }
 
@@ -532,5 +540,54 @@ class Node
         }
 
         return null;
+    }
+
+    /**
+     * Generate tree from XML Document
+     * 
+     * @param  DOMElement   $element
+     * @param  array        $namespaces
+     *
+     * @see https://www.php.net/manual/es/dom.constants.php
+     */
+    public function fromXml($element, array &$namespaces)
+    {
+        $this->setName( $element->localName );
+        $this->setNamespace( $element->prefix );
+        if (!in_array($element->prefix, $namespaces)) {
+            $namespaces[] = $element->prefix;
+        }
+
+        // Attributes
+        if ($element->hasAttributes()) {
+            foreach ($element->attributes as $item) {
+                $this->add($item->nodeName, $item->nodeValue);
+            }
+        }
+
+        // Childs
+        if ($element->hasChildNodes()) {
+            foreach ($element->childNodes as $child) {
+                switch ($child->nodeType) {
+                    // Node
+                    case XML_ELEMENT_NODE:
+                        $node = new Node($child->nodeName, $this);
+                        $node->fromXml( $child, $namespaces );
+                        $this->add( $node );
+                        break;
+
+                    // Text
+                    case XML_TEXT_NODE:
+                        $textValue = trim($child->nodeValue);
+                        if (!empty($textValue)) {
+                            $this->setValue( $textValue );
+                        }
+                        break;
+                    
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }

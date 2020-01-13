@@ -1,0 +1,7 @@
+<envelope:soap xmlns:envelope="http://envelope" xmlns:ns="http://ns">
+  <envelope:keys query="group"></envelope:keys>
+  <ns:query type="Structure">
+    <ns:fields type="Array"></ns:fields>
+    <ns:Category type="String">All</ns:Category>
+  </ns:query>
+</envelope:soap>
