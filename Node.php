@@ -1,8 +1,8 @@
 <?php
 
-namespace NK\SoapYaml;
+namespace Lacedorium\SoapYaml;
 
-use NK\SoapYaml\Exception\LoadException;
+use Lacedorium\SoapYaml\Exception\LoadException;
 
 /**
  * SOAP YAML Node class
@@ -302,7 +302,7 @@ class Node
         if (is_object($name)) {
             // name is a Node object
             $node = $name;
-            if (get_class($node) == 'NK\SoapYaml\Node') {
+            if (get_class($node) == 'Lacedorium\SoapYaml\Node') {
                 $node->setParent( $this );
                 $this->childs[ $node->getName() ] = $node;
             }

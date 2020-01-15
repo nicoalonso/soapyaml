@@ -1,5 +1,5 @@
 {
-    "name": "nk/soapyaml",
+    "name": "lacedorium/soap-yaml",
     "type": "library",
     "description": "Create SOAP requests by YAML templates",
     "keywords": [],
@@ -15,7 +15,7 @@
         "symfony/yaml": "^3.4.36"
     },
     "autoload": {
-        "psr-4": { "NK\\SoapYaml\\": "" },
+        "psr-4": { "Lacedorium\\SoapYaml\\": "" },
         "exclude-from-classmap": [
             "/Tests/"
         ]

@@ -1,9 +1,9 @@
 <?php
 
-namespace NK\SoapYaml\Tests;
+namespace Lacedorium\SoapYaml\Tests;
 
 use PHPUnit\Framework\TestCase;
-use NK\SoapYaml\Node;
+use Lacedorium\SoapYaml\Node;
 
 /**
  * Test Node
@@ -40,7 +40,7 @@ class NodeTest extends TestCase
 
     /**
      * Test add exception wrong name
-     * @expectedException NK\SoapYaml\Exception\LoadException
+     * @expectedException Lacedorium\SoapYaml\Exception\LoadException
      */
     public function testAddWrongName()
     {
@@ -53,7 +53,7 @@ class NodeTest extends TestCase
 
     /**
      * Test add exception Node object
-     * @expectedException NK\SoapYaml\Exception\LoadException
+     * @expectedException Lacedorium\SoapYaml\Exception\LoadException
      */
     public function testAddWrongNodeObj()
     {
@@ -111,7 +111,7 @@ class NodeTest extends TestCase
 
     /**
      * Test __call
-     * @expectedException NK\SoapYaml\Exception\LoadException
+     * @expectedException Lacedorium\SoapYaml\Exception\LoadException
      */
     public function testCallMethodNotExists()
     {

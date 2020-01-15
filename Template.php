@@ -1,12 +1,12 @@
 <?php
 
-namespace NK\SoapYaml;
+namespace Lacedorium\SoapYaml;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
-use NK\SoapYaml\Node;
-use NK\SoapYaml\Exception\LoadException;
+use Lacedorium\SoapYaml\Node;
+use Lacedorium\SoapYaml\Exception\LoadException;
 
 /**
  * Template Class

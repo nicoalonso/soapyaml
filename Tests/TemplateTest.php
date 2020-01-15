@@ -1,9 +1,9 @@
 <?php
 
-namespace NK\SoapYaml\Tests;
+namespace Lacedorium\SoapYaml\Tests;
 
 use PHPUnit\Framework\TestCase;
-use NK\SoapYaml\Template;
+use Lacedorium\SoapYaml\Template;
 
 /**
  * Test Node

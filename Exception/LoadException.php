@@ -1,6 +1,6 @@
 <?php
 
-namespace NK\SoapYaml\Exception;
+namespace Lacedorium\SoapYaml\Exception;
 
 /**
  * Exception class
